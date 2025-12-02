@@ -1,0 +1,8 @@
+-- Part 1 --
+Attempt 1: 928 Correct!
+
+-- Part 2 --
+Attempt 1: 6040 Incorrect (too low)
+Attempt 2: 6480 Incorrect (too high)
+Attempt 3: 6067 Incorrect (too low)
+Attempt 4: 6106 Correct!

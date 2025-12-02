@@ -38,44 +38,23 @@ fn part_2(input: Vec<String>) -> u32 {
         let num: i32 = line.chars().skip(1).collect::<String>().parse().unwrap();
         debug!("Direction: {:?}, Number: {:?}", dir, num);
 
-        let mut start = 0;
-
-        if pos == 0 {
-            num_zero -= 1
-        }
+        num_zero += (num / 100) as u32;
+        let remaining = num % 100;
 
         match dir {
             'L' => {
-                debug!("Pos (pre-correct): {}", pos);
-                pos -= num;
-                start = pos;
-                while pos < 0 {
-                    pos += 100;
+                if pos > 0 && pos <= remaining {
                     num_zero += 1;
-                    debug!("Passed 0")
                 }
+                pos = (pos - num).rem_euclid(100);
             }
             'R' => {
-                debug!("Pos (pre-correct): {}", pos);
-                pos += num;
-                start = pos;
-                while pos >= 100 {
-                    pos -= 100;
+                if pos + remaining >= 100 {
                     num_zero += 1;
-                    debug!("Passed 0")
                 }
+                pos = (pos + num).rem_euclid(100);
             }
             _ => error!("Invalid direction received in input"),
-        }
-
-        if pos == 0 {
-            num_zero += 1;
-            debug!("Is 0")
-        }
-        debug!("Pos (post-correct): {}", pos);
-        let target = ((start % 100) + 100) % 100;
-        if pos != target {
-            error!("INVALID CORRECTION - target: {}, pos: {}", target, pos);
         }
     }
 
@@ -124,5 +103,12 @@ fn part1_test2() {
 fn part2_test1() {
     if let Ok(input) = read_lines("./inputs/day01/test.txt") {
         assert_eq!(part_2(input), 6);
+    }
+}
+
+#[test]
+fn part2_test2() {
+    if let Ok(input) = read_lines("./inputs/day01/input.txt") {
+        assert_eq!(part_2(input), 6106);
     }
 }
