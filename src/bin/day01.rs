@@ -38,27 +38,37 @@ fn part_2(input: Vec<String>) -> u32 {
         let num: i32 = line.chars().skip(1).collect::<String>().parse().unwrap();
         debug!("Direction: {:?}, Number: {:?}", dir, num);
 
+        let mut start = 0;
+
+        if pos == 0 {
+            num_zero -= 1
+        }
+
         match dir {
-            'L' => pos -= num,
-            'R' => pos += num,
+            'L' => {
+                debug!("Pos (pre-correct): {}", pos);
+                pos -= num;
+                start = pos;
+                while pos < 0 {
+                    pos += 100;
+                    num_zero += 1;
+                    debug!("Passed 0")
+                }
+            }
+            'R' => {
+                debug!("Pos (pre-correct): {}", pos);
+                pos += num;
+                start = pos;
+                while pos >= 100 {
+                    pos -= 100;
+                    num_zero += 1;
+                    debug!("Passed 0")
+                }
+            }
             _ => error!("Invalid direction received in input"),
         }
 
-        debug!("Pos (pre-correct): {}", pos);
-        let start = pos;
-        if pos < 0 {
-            while pos < 0 {
-                pos += 100;
-                num_zero += 1;
-                debug!("Passed 0")
-            }
-        } else if pos >= 100 {
-            while pos >= 100 {
-                pos -= 100;
-                num_zero += 1;
-                debug!("Passed 0")
-            }
-        } else if pos == 0 {
+        if pos == 0 {
             num_zero += 1;
             debug!("Is 0")
         }
