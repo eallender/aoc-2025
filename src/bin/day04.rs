@@ -27,11 +27,11 @@ fn create_grid(input: Vec<String>) -> Vec<Vec<char>> {
     grid
 }
 
-fn check_neighbors(grid: &Vec<Vec<char>>, x: usize, y: usize) -> bool {
+fn is_accessible(grid: &Vec<Vec<char>>, x: usize, y: usize) -> bool {
     let mut num_empty = 0;
     for i in -1..=1 {
         for j in -1..=1 {
-            if x == 0 && y == 0 {
+            if i == 0 && j == 0 {
                 continue;
             }
             let new_y = (y as i32 + i) as usize;
@@ -52,9 +52,38 @@ fn part_1(input: Vec<String>) -> i32 {
     for (y, line) in grid.iter().enumerate() {
         debug!("{:?}", line);
         for (x, index) in line.iter().enumerate() {
-            if *index == '@' && check_neighbors(&grid, x, y) {
+            if *index == '@' && is_accessible(&grid, x, y) {
                 num_rolls += 1;
             }
+        }
+    }
+
+    info!("Found {num_rolls} accessible rolls");
+    num_rolls
+}
+
+fn part_2(input: Vec<String>) -> i32 {
+    let mut grid = create_grid(input);
+    let mut num_rolls = 0;
+
+    loop {
+        let mut to_remove = vec![];
+
+        for y in 0..grid.len() {
+            for x in 0..grid[y].len() {
+                if grid[y][x] == '@' && is_accessible(&grid, x, y) {
+                    to_remove.push((x, y));
+                }
+            }
+        }
+
+        if to_remove.is_empty() {
+            break;
+        }
+
+        for (x, y) in to_remove {
+            grid[y][x] = '.';
+            num_rolls += 1;
         }
     }
 
@@ -77,9 +106,9 @@ fn main() {
         }
         Some(2) => {
             info!("-- Executing Part 2 --");
-            // if let Ok(input) = read_lines(&args.input) {
-            //     part_2(input);
-            // }
+            if let Ok(input) = read_lines(&args.input) {
+                part_2(input);
+            }
         }
         _ => error!("Insufficient part provided: 1 or 2 required"),
     }
@@ -95,5 +124,18 @@ fn part1_test() {
 fn part1_input() {
     if let Ok(input) = read_lines("./inputs/day04/input.txt") {
         assert_eq!(part_1(input), 1474);
+    }
+}
+
+#[test]
+fn part2_test() {
+    if let Ok(input) = read_lines("./inputs/day04/test.txt") {
+        assert_eq!(part_2(input), 43);
+    }
+}
+#[test]
+fn part2_input() {
+    if let Ok(input) = read_lines("./inputs/day04/input.txt") {
+        assert_eq!(part_2(input), 8910);
     }
 }
