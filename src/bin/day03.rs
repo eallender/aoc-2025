@@ -33,7 +33,44 @@ fn part_1(input: Vec<String>) -> u32 {
     total_joltage
 }
 
-fn part_2() {}
+fn part_2(input: Vec<String>) -> u64 {
+    let mut total_joltage: u64 = 0;
+
+    for line in input {
+        let mut batteries: Vec<u32> = vec![0; 12];
+        let last_index = line.chars().count() - 1;
+        debug!("Current battery bank:\n{}", line);
+        for (bank_i, char) in line.chars().enumerate() {
+            debug!("Batteries:\n{:?}", batteries);
+            for bat_i in 0..batteries.len() {
+                if let Some(curr) = char.to_digit(10) {
+                    debug!("Current: {}", curr);
+                    if curr > batteries[bat_i]
+                        && (last_index - bank_i >= batteries.len() - 1 - bat_i)
+                    {
+                        batteries[bat_i] = curr;
+                        for i in bat_i + 1..batteries.len() {
+                            batteries[i] = 0;
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+
+        let joltage: u64 = batteries
+            .iter()
+            .map(|d| d.to_string())
+            .collect::<String>()
+            .parse()
+            .unwrap();
+
+        debug!("Highest joltage: {}", joltage);
+        total_joltage += joltage;
+    }
+    info!("Total Joltage: {}", total_joltage);
+    total_joltage
+}
 
 fn main() {
     dotenv().ok();
@@ -51,7 +88,7 @@ fn main() {
         Some(2) => {
             info!("-- Executing Part 2 --");
             if let Ok(input) = read_lines(&args.input) {
-                // part_2(input);
+                part_2(input);
             }
         }
         _ => error!("Insufficient part provided: 1 or 2 required"),
@@ -88,5 +125,19 @@ fn part1_hlh() {
 fn part1_input() {
     if let Ok(input) = read_lines("./inputs/day03/input.txt") {
         assert_eq!(part_1(input), 17766);
+    }
+}
+
+#[test]
+fn part2_test() {
+    if let Ok(input) = read_lines("./inputs/day03/test.txt") {
+        assert_eq!(part_2(input), 3121910778619);
+    }
+}
+
+#[test]
+fn part2_input() {
+    if let Ok(input) = read_lines("./inputs/day03/input.txt") {
+        assert_eq!(part_2(input), 176582889354075);
     }
 }
