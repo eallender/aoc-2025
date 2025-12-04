@@ -59,7 +59,7 @@ fn main() {
 }
 
 #[test]
-fn part1_test1() {
+fn part1_test() {
     if let Ok(input) = read_lines("./inputs/day03/test.txt") {
         assert_eq!(part_1(input), 357);
     }

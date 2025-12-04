@@ -95,28 +95,28 @@ fn main() {
 }
 
 #[test]
-fn part1_test1() {
+fn part1_test() {
     if let Ok(input) = read_lines("./inputs/day02/test.txt") {
         assert_eq!(part_1(input), 1227775554);
     }
 }
 
 #[test]
-fn part1_test2() {
+fn part1_input() {
     if let Ok(input) = read_lines("./inputs/day02/input.txt") {
         assert_eq!(part_1(input), 16793817782);
     }
 }
 
 #[test]
-fn part2_test1() {
+fn part2_test() {
     if let Ok(input) = read_lines("./inputs/day02/test.txt") {
         assert_eq!(part_2(input), 4174379265);
     }
 }
 
 #[test]
-fn part2_test2() {
+fn part2_input() {
     if let Ok(input) = read_lines("./inputs/day02/input.txt") {
         assert_eq!(part_2(input), 27469417404);
     }
