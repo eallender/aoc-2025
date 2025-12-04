@@ -1,0 +1,3 @@
+-- Part 1 --
+Attempt 1: 17726 Incorrect (too low)
+Attempt 3: 17766 Correct!
