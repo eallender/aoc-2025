@@ -1,0 +1,4 @@
+-- Part 1 --
+Attempt 1: 1474 Correct!
+
+-- Part 2 --
