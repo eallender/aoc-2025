@@ -1,5 +1,3 @@
-use std::collections::HashMap;
-
 use aoc_2025::{Args, read_lines};
 use clap::Parser;
 use dotenv::dotenv;
@@ -7,7 +5,7 @@ use log::{debug, error, info};
 
 fn part_1(input: Vec<String>) -> i32 {
     let mut read_ranges = false;
-    let mut ranges = HashMap::new();
+    let mut ranges = Vec::new();
     let mut total_valid = 0;
 
     for line in input {
@@ -19,14 +17,14 @@ fn part_1(input: Vec<String>) -> i32 {
             for (key, value) in &ranges {
                 let id: u64 = line.parse().unwrap();
                 if id <= *value && id >= *key {
-                    info!("Valid ID: {}, Range: {}, {}", id, *key, *value);
+                    debug!("Valid ID: {}, Range: {}, {}", id, *key, *value);
                     total_valid += 1;
                     break;
                 }
             }
         } else {
             let range: Vec<u64> = line.split("-").map(|s: &str| s.parse().unwrap()).collect();
-            ranges.insert(range[0], range[1]);
+            ranges.push((range[0], range[1]));
         }
     }
 
@@ -54,5 +52,18 @@ fn main() {
             // }
         }
         _ => error!("Insufficient part provided: 1 or 2 required"),
+    }
+}
+
+#[test]
+fn part1_test() {
+    if let Ok(input) = read_lines("./inputs/day05/test.txt") {
+        assert_eq!(part_1(input), 3);
+    }
+}
+#[test]
+fn part1_input() {
+    if let Ok(input) = read_lines("./inputs/day05/input.txt") {
+        assert_eq!(part_1(input), 509);
     }
 }
