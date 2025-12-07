@@ -1,31 +1,7 @@
-use aoc_2025::{Args, read_lines};
+use aoc_2025::{Args, read_lines, create_grid};
 use clap::Parser;
 use dotenv::dotenv;
 use log::{debug, error, info};
-
-fn create_grid(input: Vec<String>) -> Vec<Vec<char>> {
-    let mut grid: Vec<Vec<char>> = vec![];
-    let row_len = input[0].len();
-    let padding = vec!['.'; row_len + 2];
-    grid.push(padding.clone());
-
-    for line in input {
-        let mut row: Vec<char> = vec![];
-        for (i, char) in line.chars().enumerate() {
-            if i == 0 {
-                row.push('.');
-            }
-            row.push(char);
-            if i == row_len - 1 {
-                row.push('.');
-            }
-        }
-        grid.push(row);
-    }
-
-    grid.push(padding);
-    grid
-}
 
 fn is_accessible(grid: &Vec<Vec<char>>, x: usize, y: usize) -> bool {
     let mut num_empty = 0;
