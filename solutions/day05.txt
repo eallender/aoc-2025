@@ -2,6 +2,6 @@
 Attempt 1: 482 Incorrect (too low)
 Attempt 2: 509 Correct!
 
--- Part 1 --
+-- Part 2 --
 Attempt 1: 304076684713791 Incorrect (too low)
 Attempt 2: 336790092076620 Correct!
