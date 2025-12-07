@@ -50,7 +50,7 @@ fn part_2(input: Vec<String>) -> u64 {
             {
                 to_fix.push(i);
                 ranges_altered = true;
-            } 
+            }
         }
         if !ranges_altered {
             ranges.push((range[0], range[1]));
@@ -126,31 +126,19 @@ fn part2_test() {
 
 #[test]
 fn part2_simple_merge() {
-    let input = vec![
-        "1-5".to_string(),
-        "3-7".to_string(),
-        "".to_string(),
-    ];
+    let input = vec!["1-5".to_string(), "3-7".to_string(), "".to_string()];
     assert_eq!(part_2(input), 7);
 }
 
 #[test]
 fn part2_adjacent_ranges() {
-    let input = vec![
-        "1-5".to_string(),
-        "6-10".to_string(),
-        "".to_string(),
-    ];
+    let input = vec!["1-5".to_string(), "6-10".to_string(), "".to_string()];
     assert_eq!(part_2(input), 10);
 }
 
 #[test]
 fn part2_contained_range() {
-    let input = vec![
-        "1-10".to_string(),
-        "3-5".to_string(),
-        "".to_string(),
-    ];
+    let input = vec!["1-10".to_string(), "3-5".to_string(), "".to_string()];
     assert_eq!(part_2(input), 10);
 }
 
@@ -167,20 +155,13 @@ fn part2_three_way_merge() {
 
 #[test]
 fn part2_separate_ranges() {
-    let input = vec![
-        "1-3".to_string(),
-        "10-12".to_string(),
-        "".to_string(),
-    ];
+    let input = vec!["1-3".to_string(), "10-12".to_string(), "".to_string()];
     assert_eq!(part_2(input), 6);
 }
 
 #[test]
 fn part2_single_range() {
-    let input = vec![
-        "5-10".to_string(),
-        "".to_string(),
-    ];
+    let input = vec!["5-10".to_string(), "".to_string()];
     assert_eq!(part_2(input), 6);
 }
 

@@ -5,18 +5,24 @@ use log::{debug, error, info};
 
 fn part_1(input: Vec<String>) -> u64 {
     let mut totals: Vec<u64> = Vec::new();
-    let signs: Vec<String> = input[input.len() - 1].split_whitespace().map(|s: &str| s.to_string()).collect();
+    let signs: Vec<String> = input[input.len() - 1]
+        .split_whitespace()
+        .map(|s: &str| s.to_string())
+        .collect();
     debug!("Input: {:?}", input);
     debug!("Signs: {:?}", signs);
 
     for index in 0..input.len() - 1 {
-        let line: Vec<u64> = input[index].split_whitespace().map(|s: &str| s.parse().unwrap()).collect();
+        let line: Vec<u64> = input[index]
+            .split_whitespace()
+            .map(|s: &str| s.parse().unwrap())
+            .collect();
         debug!("Line: {:?}", line);
 
         if index == 0 {
             for problem in line {
                 totals.push(problem);
-            }            
+            }
         } else {
             for (i, problem) in line.iter().enumerate() {
                 if signs[i] == "*" {
@@ -40,15 +46,18 @@ fn part_1(input: Vec<String>) -> u64 {
 fn part_2(input: Vec<String>) -> u64 {
     let mut totals: Vec<u64> = Vec::new();
     let mut problems: Vec<Vec<String>> = Vec::new();
-    let signs: Vec<String> = input[input.len() - 1].split_whitespace().map(|s: &str| s.to_string()).collect();
+    let signs: Vec<String> = input[input.len() - 1]
+        .split_whitespace()
+        .map(|s: &str| s.to_string())
+        .collect();
     debug!("Input: {:?}", input);
     debug!("Signs: {:?}", signs);
 
-    for index in 0..input.len()-1 {
-        let mut line: Vec<String> = vec!();
+    for index in 0..input.len() - 1 {
+        let mut line: Vec<String> = vec![];
         let mut curr_string = "".to_string();
         let mut is_first = true;
-        for (i,char) in input[input.len()-1].chars().enumerate() {
+        for (i, char) in input[input.len() - 1].chars().enumerate() {
             if char == '+' || char == '*' {
                 if !is_first {
                     curr_string.pop();
@@ -60,7 +69,7 @@ fn part_2(input: Vec<String>) -> u64 {
             }
             debug!("{}", input[index].chars().nth(i).unwrap());
             curr_string.push(input[index].chars().nth(i).unwrap());
-        } 
+        }
         line.push(curr_string.clone());
 
         debug!("Line: {:?}", line);
@@ -86,13 +95,9 @@ fn part_2(input: Vec<String>) -> u64 {
     for (i, problem) in problems.iter().enumerate() {
         debug!("{:?}", problem);
         if signs[i] == "+" {
-            totals.push(problem.iter()
-                .map(|s| s.parse::<u64>().unwrap())
-                .sum());
+            totals.push(problem.iter().map(|s| s.parse::<u64>().unwrap()).sum());
         } else if signs[i] == "*" {
-            totals.push(problem.iter()
-                .map(|s| s.parse::<u64>().unwrap())
-                .product());
+            totals.push(problem.iter().map(|s| s.parse::<u64>().unwrap()).product());
         }
     }
 
