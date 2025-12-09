@@ -5,6 +5,7 @@ use clap::Parser;
 use dotenv::dotenv;
 use log::{debug, error, info};
 
+#[derive(Debug)]
 struct Point {
     x: i64,
     y: i64,
@@ -20,6 +21,7 @@ impl Point {
     }
 }
 
+#[derive(Debug)]
 struct Edge {
     box1: usize,
     box2: usize,
@@ -126,7 +128,99 @@ fn part_1(input: Vec<String>, num_conn: usize) -> usize {
     total
 }
 
-fn part_2(input: Vec<String>) {}
+fn part_2(input: Vec<String>) -> i64 {
+    let mut points: Vec<Point> = Vec::new();
+    for point in input {
+        let parts: Vec<i64> = point
+            .split(',')
+            .map(|s| s.parse::<i64>().unwrap())
+            .collect();
+        points.push(Point {
+            x: parts[0],
+            y: parts[1],
+            z: parts[2],
+        });
+    }
+
+    let mut edges: Vec<Edge> = Vec::new();
+    for i in 0..points.len() {
+        for j in i + 1..points.len() {
+            let distance = points[i].distance_to(&points[j]);
+            edges.push(Edge {
+                box1: i,
+                box2: j,
+                distance,
+            });
+        }
+    }
+
+    edges.sort_by(|a, b| a.distance.partial_cmp(&b.distance).unwrap());
+
+    let mut con_points: HashMap<usize, usize> = HashMap::new();
+    let mut circuits: Vec<Circuit> = Vec::new();
+    for index in 0..edges.len() {
+        let edge = &edges[index];
+        let box1_circuit = con_points.get(&edge.box1).copied();
+        let box2_circuit = con_points.get(&edge.box2).copied();
+        debug!("Circuits: \n{:?}", circuits);
+        debug!("Edge: \n{:?}", edge);
+
+        match (box1_circuit, box2_circuit) {
+            (None, None) => {
+                let circuit_id = circuits.len();
+                let mut circuit = Circuit { boxes: Vec::new() };
+                circuit.join(edge.box1);
+                circuit.join(edge.box2);
+                con_points.insert(edge.box1, circuit_id);
+                con_points.insert(edge.box2, circuit_id);
+                circuits.push(circuit);
+            }
+            (Some(c1), None) => {
+                circuits[c1].join(edge.box2);
+                con_points.insert(edge.box2, c1);
+                if circuits[c1].size() == points.len() {
+                    let total: i64 = points[edge.box1].x * points[edge.box2].x;
+                    info!("Total: {total}");
+                    info!("Point1: {:?}", points[edge.box1]);
+                    info!("Point2: {:?}", points[edge.box2]);
+                    return total;
+                }
+            }
+            (None, Some(c2)) => {
+                circuits[c2].join(edge.box1);
+                con_points.insert(edge.box1, c2);
+                if circuits[c2].size() == points.len() {
+                    let total: i64 = points[edge.box1].x * points[edge.box2].x;
+                    info!("Total: {total}");
+                    info!("Point1: {:?}", points[edge.box1]);
+                    info!("Point2: {:?}", points[edge.box2]);
+                    return total;
+                }
+            }
+            (Some(c1), Some(c2)) => {
+                if c1 == c2 {
+                    continue;
+                } else {
+                    let boxes_to_move = circuits[c2].boxes.clone();
+                    for box_id in boxes_to_move {
+                        circuits[c1].join(box_id);
+                        con_points.insert(box_id, c1);
+                    }
+                    circuits[c2].boxes.clear();
+                    if circuits[c1].size() == points.len() {
+                        let total: i64 = points[edge.box1].x * points[edge.box2].x;
+                        info!("Total: {total}");
+                        info!("Point1: {:?}", points[edge.box1]);
+                        info!("Point2: {:?}", points[edge.box2]);
+                        return total;
+                    }
+                }
+            }
+        }
+    }
+
+    0
+}
 
 fn main() {
     dotenv().ok();
@@ -167,5 +261,18 @@ fn part1_test() {
 fn part1_input() {
     if let Ok(input) = read_lines("./inputs/day08/input.txt") {
         assert_eq!(part_1(input, 1000), 50568);
+    }
+}
+
+#[test]
+fn part2_test() {
+    if let Ok(input) = read_lines("./inputs/day08/test.txt") {
+        assert_eq!(part_2(input), 25272);
+    }
+}
+#[test]
+fn part2_input() {
+    if let Ok(input) = read_lines("./inputs/day08/input.txt") {
+        assert_eq!(part_2(input), 36045012);
     }
 }
