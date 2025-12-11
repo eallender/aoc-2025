@@ -2,3 +2,7 @@
 Attempt 1: 4763509452 Correct!
 
 -- Part 2 --
+Attempt 1: 1516863759 Incorrect (too low)
+Attempt 2: 4605403304 Incorrect (too high)
+Attempt 3: 4520274187 Incorrect (too high)
+Attempt 4: 1516897893 Correct
