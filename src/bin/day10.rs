@@ -1,6 +1,9 @@
 use aoc_2025::{Args, read_lines};
 use clap::Parser;
 use dotenv::dotenv;
+use good_lp::{
+    Expression, ProblemVariables, Solution, SolverModel, Variable, constraint, default_solver,
+};
 use log::{debug, error, info};
 
 #[derive(Debug)]
@@ -101,7 +104,54 @@ fn part_1(input: Vec<String>) -> usize {
     sum
 }
 
-fn part_2(input: Vec<String>) {}
+fn solve_joltage(machine: &Machine) -> usize {
+    let n_buttons = machine.buttons.len();
+
+    // Create decision variables: x[i] = number of times to press button i
+    let mut vars = ProblemVariables::new();
+    let x: Vec<Variable> = (0..n_buttons).map(|_| vars.add_variable()).collect();
+
+    // Objective: minimize total button presses
+    let objective: Expression = x.iter().map(|&var| var).sum();
+    let mut problem = vars.minimise(objective).using(default_solver);
+
+    // Add non-negativity constraints
+    for &var in &x {
+        problem = problem.with(constraint!(var >= 0));
+    }
+
+    // Add constraint for each counter
+    for (counter_idx, &target_val) in machine.joltage.iter().enumerate() {
+        // Sum of all buttons that affect this counter must equal target
+        let constraint_expr: Expression = machine
+            .buttons
+            .iter()
+            .enumerate()
+            .filter(|(_, button)| button.contains(&counter_idx))
+            .map(|(button_idx, _)| x[button_idx])
+            .sum();
+
+        problem = problem.with(constraint!(constraint_expr == target_val as i32));
+    }
+
+    let solution = problem.solve().expect("Failed to solve");
+    x.iter()
+        .map(|&var| solution.value(var).round() as usize)
+        .sum()
+}
+
+fn part_2(input: Vec<String>) -> usize {
+    let machines = read_input(input);
+    let mut min_presses: Vec<usize> = Vec::new();
+
+    for machine in machines {
+        min_presses.push(solve_joltage(&machine));
+    }
+    debug!("Result: {:?}", min_presses);
+    let sum = min_presses.iter().sum::<usize>();
+    info!("Sum: {}", sum);
+    sum
+}
 
 fn main() {
     dotenv().ok();
