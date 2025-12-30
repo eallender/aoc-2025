@@ -3,3 +3,4 @@ Attempt 1: 436 Correct!
 
 -- Part 2 --
 Attempt 1: 15000 Incorrect (too high)
+Attempt 2: 14910 Incorrect (too low)

@@ -3,6 +3,7 @@ use clap::Parser;
 use dotenv::dotenv;
 use good_lp::{
     Expression, ProblemVariables, Solution, SolverModel, Variable, constraint, default_solver,
+    variable,
 };
 use log::{debug, error, info};
 
@@ -107,37 +108,31 @@ fn part_1(input: Vec<String>) -> usize {
 fn solve_joltage(machine: &Machine) -> usize {
     let n_buttons = machine.buttons.len();
 
-    // Create decision variables: x[i] = number of times to press button i
     let mut vars = ProblemVariables::new();
-    let x: Vec<Variable> = (0..n_buttons).map(|_| vars.add_variable()).collect();
+    let x: Vec<Variable> = (0..n_buttons)
+        .map(|_| vars.add(variable().integer().min(0)))
+        .collect();
 
-    // Objective: minimize total button presses
-    let objective: Expression = x.iter().map(|&var| var).sum();
+    // Minimize number of button presses
+    let objective: Expression = x.iter().copied().sum();
     let mut problem = vars.minimise(objective).using(default_solver);
 
-    // Add non-negativity constraints
-    for &var in &x {
-        problem = problem.with(constraint!(var >= 0));
-    }
-
-    // Add constraint for each counter
+    // Constraints per counter
     for (counter_idx, &target_val) in machine.joltage.iter().enumerate() {
-        // Sum of all buttons that affect this counter must equal target
-        let constraint_expr: Expression = machine
+        let expr: Expression = machine
             .buttons
             .iter()
             .enumerate()
-            .filter(|(_, button)| button.contains(&counter_idx))
-            .map(|(button_idx, _)| x[button_idx])
+            .filter(|(_, b)| b.contains(&counter_idx))
+            .map(|(i, _)| x[i])
             .sum();
 
-        problem = problem.with(constraint!(constraint_expr == target_val as i32));
+        problem = problem.with(constraint!(expr == target_val as i32));
     }
 
-    let solution = problem.solve().expect("Failed to solve");
-    x.iter()
-        .map(|&var| solution.value(var).round() as usize)
-        .sum()
+    let solution = problem.solve().expect("Failed to solve ILP");
+
+    x.iter().map(|&v| solution.value(v) as usize).sum()
 }
 
 fn part_2(input: Vec<String>) -> usize {
