@@ -132,7 +132,13 @@ fn solve_joltage(machine: &Machine) -> usize {
 
     let solution = problem.solve().expect("Failed to solve ILP");
 
-    x.iter().map(|&v| solution.value(v) as usize).sum()
+    // Extract solution and verify
+    let sol: Vec<usize> = x
+        .iter()
+        .map(|&v| solution.value(v).round() as usize)
+        .collect();
+
+    sol.iter().sum()
 }
 
 fn part_2(input: Vec<String>) -> usize {
@@ -181,5 +187,18 @@ fn part1_test() {
 fn part1_input() {
     if let Ok(input) = read_lines("./inputs/day10/input.txt") {
         assert_eq!(part_1(input), 436);
+    }
+}
+
+#[test]
+fn part2_test() {
+    if let Ok(input) = read_lines("./inputs/day10/test.txt") {
+        assert_eq!(part_2(input), 33);
+    }
+}
+#[test]
+fn part2_input() {
+    if let Ok(input) = read_lines("./inputs/day10/input.txt") {
+        assert_eq!(part_2(input), 14999);
     }
 }
