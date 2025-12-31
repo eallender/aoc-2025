@@ -70,6 +70,7 @@ dependencies = [
  "env_logger",
  "good_lp",
  "log",
+ "regex",
 ]
 
 [[package]]
