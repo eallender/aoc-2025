@@ -126,7 +126,7 @@ fn part_2(input: Vec<String>) -> u64 {
 
     for rectangle in rectangles {
         if rectangle.area < best_area {
-            continue
+            continue;
         }
         let p1 = &points[rectangle.point1];
         let p2 = &points[rectangle.point2];
@@ -139,9 +139,7 @@ fn part_2(input: Vec<String>) -> u64 {
         let mut has_inside_point = false;
 
         for &(x, y) in &rg {
-            if x > min_x && x < max_x &&
-            y > min_y && y < max_y 
-            {
+            if x > min_x && x < max_x && y > min_y && y < max_y {
                 has_inside_point = true;
                 break;
             }

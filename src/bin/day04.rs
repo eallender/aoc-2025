@@ -1,4 +1,4 @@
-use aoc_2025::{Args, read_lines, create_grid};
+use aoc_2025::{Args, create_grid, read_lines};
 use clap::Parser;
 use dotenv::dotenv;
 use log::{debug, error, info};

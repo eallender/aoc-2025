@@ -10,7 +10,6 @@ fn visit_neighbors(
     end: &str,
     map: &HashMap<String, Vec<String>>,
 
-
     memo: &mut HashMap<(String, String), i64>,
 ) -> i64 {
     debug!("{start}");
@@ -55,7 +54,6 @@ fn part_1(input: Vec<String>) -> i64 {
 
     info!("Total Paths: {total_paths}");
     total_paths
-
 }
 
 fn part_2(input: Vec<String>) -> i64 {
